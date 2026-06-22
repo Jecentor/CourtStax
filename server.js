@@ -344,6 +344,11 @@ const server = http.createServer(async (req, res) => {
 
   const url = req.url.split("?")[0];
 
+  // ---- health check for hosting platforms (doesn't depend on any specific club) ----
+  if (url === "/healthz" && req.method === "GET") {
+    return send(res, 200, { ok: true });
+  }
+
   // ---- create a brand new club session ----
   // POST /api/session  { clubName }  -> { code, ...sessionState }
   if (url === "/api/session" && req.method === "POST") {
