@@ -49,8 +49,22 @@ This project includes a `render.yaml` so deployment is mostly automatic.
 1. Push this folder to a GitHub repo (Render deploys from a Git repo).
 2. Go to https://render.com → New → Blueprint → connect your repo.
 3. Render reads `render.yaml` automatically: it will create a free web
-   service running `node server.js`, with a small persistent disk mounted at
-   `/data` so `data.json` survives restarts and redeploys.
+   service running `node server.js`.
+
+   **Note on data persistence:** Render's free tier doesn't support
+   persistent disks at all (that's a paid-tier feature). This means
+   `data.json` lives only on the service's temporary filesystem — it
+   survives fine while the service is running, but resets whenever Render
+   restarts the service (which it does automatically after ~15 minutes of
+   inactivity, or on a redeploy). For beta testing this is usually fine:
+   worst case, you re-check people in if a restart happens mid-session.
+
+   **If you want session data to survive restarts:** upgrade the service to
+   a paid instance type in the Render dashboard (starts around $7/mo), then
+   add a disk back yourself: Render dashboard → your service → Disks → Add
+   Disk → mount path `/data` → and set an environment variable `DATA_DIR=/data`
+   in the dashboard's Environment tab. No code changes needed — `server.js`
+   already checks for `DATA_DIR` and uses it when present.
 4. Once deployed, Render gives you a public URL like
    `https://courtstax.onrender.com` — that works from any phone, any network,
    no Wi-Fi requirement.

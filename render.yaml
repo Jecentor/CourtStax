@@ -6,10 +6,3 @@ services:
     buildCommand: "echo no build needed"
     startCommand: "node server.js"
     healthCheckPath: /api/state
-    disk:
-      name: courtstax-data
-      mountPath: /data
-      sizeGB: 1
-    envVars:
-      - key: DATA_DIR
-        value: /data
